@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# Wait for the property system to be up.
+while [ ! -e /dev/socket/property_service ]; do sleep 0.1; done
+
+# Init wlan interface on boot
+while [ ! -e /dev/wlan ]; do sleep 0.2; done
+echo 1 > /dev/ipa && echo ON > /dev/wlan
+
+#backlight
+mount -o bind /sys/class/backlight/panel0-backlight/ /sys/class/backlight/backlight
+chmod 0666 /sys/class/backlight/panel0-backlight/brightness
+chmod 0666 /sys/class/backlight/backlight/
+
+# While the time_daemon binary has been overlayed by a non-executable, Android
+# init will continue trying to restart that service. Stop the cycle by
+# explicitly tell it to stop.
+setprop ctl.stop time_daemon
+
+# Enable lte-battery-saver.service
+if ! systemctl --global -q is-enabled lte-battery-saver.service; then
+  echo "device-hacks script: enable and start lte-battery-saver.service";
+  # needs system writable to apply symlink on enabling service
+  mount -o rw,remount /
+  systemctl --global enable lte-battery-saver.service
+  systemctl --global start lte-battery-saver.service
+  # remount read only!
+  mount -o ro,remount /
+else
+  echo "device-hacks script: lte-battery-saver.service already enabled";
+fi
+
+# Set schedtune boost
+echo 20 > /sys/fs/cgroup/schedtune/schedtune.boost
+echo 1 > /sys/fs/cgroup/schedtune/schedtune.prefer_idle
