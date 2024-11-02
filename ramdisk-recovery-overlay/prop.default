@@ -264,8 +264,6 @@ ro.havoc.build.version=Havoc-OS-v3.11-20201114-hotdogb-Unofficial
 ro.havoc.fingerprint=Havoc-OS/v3.11/10/Unofficial/20201114/1524
 ro.havoc.releasetype=Unofficial
 ro.havoc.version=3.11
-
-ro.boot.dynamic_partitions=true
 ro.product.first_api_level=29
 ro.vendor.build.security_patch=2020-07-01
 ro.vendor.product.cpu.abilist=arm64-v8a,armeabi-v7a,armeabi
@@ -579,4 +577,3 @@ ro.lmk.kill_timeout_ms=100
 # RECOVERY UI BUILD PROPERTIES
 #
 ro.sf.lcd_density=560
-ro.boot.dynamic_partitions=true
