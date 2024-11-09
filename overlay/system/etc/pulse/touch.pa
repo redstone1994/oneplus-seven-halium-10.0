@@ -52,7 +52,7 @@ load-module module-null-source source_name=source.fake.sco rate=8000 channels=1
 #*** select specific sdk 29 module manually ***#
 # since auto discover seems to miss some options, which make bluetooth calls work #
 .ifexists module-droid-card-29.so
-load-module module-droid-card-29 rate=48000 voice_virtual_stream=true quirks=-output_deep_buffer
+load-module module-droid-card-29 output_deep_buffer=true voice_virtual_stream=true rate=48000
 load-module module-droid-hidl
 .endif
 #*** end oneplus7 mod for focal ***#
