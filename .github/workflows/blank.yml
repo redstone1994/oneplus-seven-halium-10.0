@@ -10,14 +10,14 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Maximize Build Space
-        uses: easimon/maximize-build-space@master
-        with:
-          root-reserve-mb: 5120
-          swap-size-mb: 1024
-          remove-dotnet: 'true'
-          remove-android: 'true'
-          remove-haskell: 'true'
+      # - name: Maximize Build Space
+      #   uses: easimon/maximize-build-space@master
+      #   with:
+      #     root-reserve-mb: 5120
+      #     swap-size-mb: 1024
+      #     remove-dotnet: 'true'
+      #     remove-android: 'true'
+      #     remove-haskell: 'true'
 
       - name: Install Build Dependencies
         run: |
