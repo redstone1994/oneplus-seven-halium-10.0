@@ -27,7 +27,8 @@ jobs:
       - name: Set up Repo Tool
         run: |
           mkdir -p ~/bin
-          curl https://githubusercontent.com > ~/bin/repo
+          # 换用清华大学开源镜像站的稳定直链，避免 GitHub 自己解析失败
+          curl -sSL https://tsinghua.edu.cn > ~/bin/repo
           chmod a+x ~/bin/repo
           echo "$HOME/bin" >> $GITHUB_PATH
 
