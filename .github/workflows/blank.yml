@@ -1,0 +1,59 @@
+name: Build Halium for OnePlus 7 Pro
+
+on:
+  workflow_dispatch: # 允许你随时在网页上点击按钮，手动触发编译
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Maximize Build Space
+        uses: easimon/maximize-build-space@master
+        with:
+          root-reserve-mb: 5120
+          swap-size-mb: 1024
+          remove-dotnet: 'true'
+          remove-android: 'true'
+          remove-haskell: 'true'
+
+      - name: Install Build Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bc bison build-essential ccache curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick lib32readline-dev lib32z1-dev liblz4-tool libncurses5-dev libsdl1.1-dev libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev python3
+
+      - name: Set up Repo Tool
+        run: |
+          mkdir -p ~/bin
+          curl https://googleapis.com > ~/bin/repo
+          chmod a+x ~/bin/repo
+          echo "$HOME/bin" >> $GITHUB_PATH
+
+      - name: Init and Sync Repo
+        run: |
+          mkdir halium && cd halium
+          repo init -u https://github.com -b halium-10.0 --depth=1
+          repo sync -c -j$(nproc) --no-clone-bundle --no-tags
+
+      - name: Integrate OnePlus 7 Pro Device Tree
+        run: |
+          mkdir -p halium/device/oneplus/guacamole
+          cp -r * halium/device/oneplus/guacamole/ || true
+
+      - name: Run Halium Build
+        run: |
+          cd halium
+          source build/envsetup.sh
+          breakfast guacamole
+          mka halium-boot
+          mka systemimage
+
+      - name: Upload Build Artifacts
+        uses: actions/actions-artifact@v4
+        with:
+          name: OnePlus-7Pro-UbuntuTouch-Images
+          path: |
+            halium/out/target/product/guacamole/halium-boot.img
+            halium/out/target/product/guacamole/system.img
