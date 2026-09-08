@@ -51,9 +51,10 @@ jobs:
           mka systemimage
 
       - name: Upload Build Artifacts
-        uses: actions/actions-artifact@v4
+        uses: actions/upload-artifact@v4
         with:
           name: OnePlus-7Pro-UbuntuTouch-Images
           path: |
             halium/out/target/product/guacamole/halium-boot.img
             halium/out/target/product/guacamole/system.img
+
